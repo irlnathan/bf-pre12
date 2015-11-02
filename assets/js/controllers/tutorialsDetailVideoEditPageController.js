@@ -23,6 +23,8 @@ angular.module('brushfire').controller('tutorialsDetailVideoEditPageController',
 
   $scope.tutorial = window.SAILS_LOCALS.tutorial;
 
+  console.log('here: ', $scope.tutorial);
+
   // We need a max for the stars (i.e. 1 out of 5 stars)
   $scope.max = 5;
 

@@ -8,7 +8,7 @@ stars: <%-
 // Notice we must check that `stars` exists using typeof to keep EJS from throwing
 // and displaying an ugly error message when rendering certain pages
 // (i.e. 404 /500 error pages)
-typeof stars !== 'undefined' ? JSON.stringify(stars) : 'null'
+_.isObject(tutorial) && !_.isUndefined(tutorial.stars) ? JSON.stringify(tutorial.stars) : 'null'
 // Note that we deliberately use 'null' (a string) because EJS converts the
 // `null` literal  into empty string (''), which is not what we want (that would
 // be invalid JS and cause a client-side error in the browser)

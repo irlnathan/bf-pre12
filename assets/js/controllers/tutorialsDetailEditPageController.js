@@ -35,18 +35,23 @@ angular.module('brushfire').controller('tutorialsDetailEditPageController', ['$s
 
   $scope.submitEditTutorialForm = function() {
 
+    // TODO: show loading state
+    // TODO: Disable double posting
+
+    // console.log('Sending request to server...');
     $http.put('/tutorials/'+$scope.fromUrlTutorialId, {
       title: $scope.tutorialDetailsEdit.title,
       description: $scope.tutorialDetailsEdit.description
     })
     .then(function onSuccess(sailsResponse){
+      // console.log('Client side redirect!');
       window.location="/tutorials/"+$scope.fromUrlTutorialId;
     })
     .catch(function onError(sailsResponse){
       console.error(sailsResponse);
     })
     .finally(function eitherWay(){
-
+      //TODO: hide loading state
     });
   };
 }]);

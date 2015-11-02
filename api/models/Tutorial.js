@@ -1,5 +1,5 @@
 /**
-* Video.js
+* Tutorial.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -13,12 +13,24 @@ module.exports = {
       type: 'string'
     },
 
-    src: {
+    description: {
       type: 'string'
     },
 
-    lengthInSeconds: {
+    stars: {
       type: 'integer'
+    },
+
+    owner: {
+      type: 'string'
+    },
+
+    totalTime: {
+      type: 'string'
+    },
+
+    videos: {
+      type: 'json'
     }
   }
 };
