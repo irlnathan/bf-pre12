@@ -128,7 +128,9 @@ module.exports = {
     // Look up the user record for the `username` parameter
     User.findOne({
       username: req.param('username')
-    }).exec(function(err, foundByUsername) {
+    })
+    .populate('tutorials')
+    .exec(function(err, foundByUsername) {
       if (err) {
         return res.negotiate(err);
       }
@@ -146,6 +148,9 @@ module.exports = {
           me: null,
           username: foundByUsername.username,
           gravatarURL: foundByUsername.gravatarURL,
+
+          // changed from tutorials (fake above) to foundByUsername
+
           tutorials: foundByUsername.tutorials
         });
       }
@@ -183,6 +188,9 @@ module.exports = {
           showAddTutorialButton: true,
           username: foundByUsername.username,
           gravatarURL: foundByUsername.gravatarURL,
+
+          // changed from tutorials (fake above) to foundByUsername
+
           tutorials: foundByUsername.tutorials
         });
       }); //</ User.findOne({id: req.session.userId})

@@ -237,20 +237,17 @@ module.exports = {
       }).exec(function(err, createdTutorial){
         if (err) return res.negotate(err);
 
-        // Update the user to contain the new tutorial
-        foundUser.tutorials = [];
-        foundUser.tutorials.push({
-          title: req.param('title'),
-          description: req.param('description'),
-          created: foundUser.createdAt,
-          updated: foundUser.updatedAt,
-          id: foundUser.id
-        });
-        User.update({id: req.session.userId})
-        .set({tutorials: foundUser.tutorials})
-        .exec(function(err){
-          if (err) return res.negotiate(err);
+        // We could do something like:
+        // foundUser.tutorials = [3,7,4];
+        // 
+        // But instead we can just use Waterline.
 
+        // Update the user to contain the new tutorial
+        foundUser.tutorials.add(foundUser.id);
+        // Then persist back to the database.
+        foundUser.save(function (err) {
+          if (err) return res.negotiate(err);
+          
           // return the new tutorial id
           return res.json({id: createdTutorial.id});
         });
@@ -320,41 +317,43 @@ module.exports = {
       if (err) return res.negotiate(err);
 
       // Propagate updates to embedded (i.e. cached) arrays of tutorials on our user records.
-      User.find().exec(function (err, users) {
-        if (err) { return res.negotiate(err); }
+      // User.find().exec(function (err, users) {
+      //   if (err) { return res.negotiate(err); }
 
-        async.each(users, function (user, next){
+      //   async.each(users, function (user, next){
 
-          // If this user does not have the tutorial that is being updated,
-          // move on to the next user.
-          var cachedTutorial = _.find(user.tutorials, { id: +req.param('id') });
+      //     // If this user does not have the tutorial that is being updated,
+      //     // move on to the next user.
+      //     var cachedTutorial = _.find(user.tutorials, { id: +req.param('id') });
 
-          // console.log('found one of them cachedTutorial:',cachedTutorial);
+      //     // console.log('found one of them cachedTutorial:',cachedTutorial);
 
-          // Otherwise, keep move on to the next user.
-          if (!cachedTutorial) {
-            return next();
-          }
+      //     // Otherwise, keep move on to the next user.
+      //     if (!cachedTutorial) {
+      //       return next();
+      //     }
 
 
-          // Otherwise, this user has the cached version of our tutorial.
-          // So we'll change the `tutorials` array and save it back to the db.
-          cachedTutorial.title = req.param('title');
-          cachedTutorial.description = req.param('description');
-          // console.log('Updating user record with new tutorials array:',tutorials);
-          User.update({
-            id: user.id
-          }).set({
-            tutorials: user.tutorials
-          }).exec(function (err) {
-            if (err) { return next(err); }
-            return next();
-          });
-        }, function (err) {
-          if (err) {return res.negotiate(err);}
-          return res.ok();
-        });
-      });
+      //     // Otherwise, this user has the cached version of our tutorial.
+      //     // So we'll change the `tutorials` array and save it back to the db.
+      //     cachedTutorial.title = req.param('title');
+      //     cachedTutorial.description = req.param('description');
+      //     // console.log('Updating user record with new tutorials array:',tutorials);
+      //     User.update({
+      //       id: user.id
+      //     }).set({
+      //       tutorials: user.tutorials
+      //     }).exec(function (err) {
+      //       if (err) { return next(err); }
+      //       return next();
+      //     });
+      //   }, function (err) {
+      //     if (err) {return res.negotiate(err);}
+      //     return res.ok();
+      //   });
+      // });
+
+      return res.ok();
     });
   },
 

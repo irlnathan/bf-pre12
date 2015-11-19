@@ -47,8 +47,14 @@ module.exports = {
       type: 'string'
     },
 
+    /*
+    [
+     {...Tutorial records...}
+    ]
+     */
     tutorials: {
-      type: 'json'
+      collection: 'Tutorial',
+      // via: 'owner'
     },
 
     toJSON: function() {
@@ -59,4 +65,4 @@ module.exports = {
       return obj;
     }
   }
-}
+};
